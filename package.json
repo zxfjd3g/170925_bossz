@@ -12,6 +12,8 @@
     "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
+    "express": "^4.16.2",
+    "mongoose": "^5.0.1",
     "react-scripts": "1.1.0",
     "redux-devtools-extension": "^2.13.2"
   },
@@ -19,6 +21,7 @@
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": "nodemon server/server.js"
   }
 }
