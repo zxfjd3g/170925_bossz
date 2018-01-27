@@ -12,6 +12,9 @@
     "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
+    "blueimp-md5": "^2.10.0",
+    "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
     "express": "^4.16.2",
     "mongoose": "^5.0.1",
     "react-scripts": "1.1.0",
