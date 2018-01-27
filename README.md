@@ -7,6 +7,12 @@
     1. 获取请求参数
     2. 处理(操作数据库数据)
     3. 返回响应
+## 3. 使用aysnc/await
+    作用: 使用同步编码方法实现异步功能
+    编写2步:
+      在调用返回promise对象的函数左边加上await: const response = await reqRegister({name, pwd, type})
+      在await所在的函数定义左边加上async
+      
 
 # day01
 ## 1. 项目开发准备

@@ -2,13 +2,14 @@
 用户登陆的路由组件
  */
 import React, {Component} from 'react'
-import {WingBlank, List, WhiteSpace, InputItem, Radio, Button} from 'antd-mobile'
+import {WingBlank, List, WhiteSpace, InputItem, Button} from 'antd-mobile'
+import {connect} from 'react-redux'
+import {Redirect} from 'react-router-dom'
 
+import {login} from '../../redux/actions'
 import Logo from '../../components/logo/logo'
 
-const RadioItem = Radio.RadioItem
-
-export default class Register extends Component {
+class Login extends Component {
 
   state = {
     name: '', // 用户名
@@ -24,7 +25,7 @@ export default class Register extends Component {
 
   // 注册
   login = () => {
-    console.log(this.state)
+    this.props.login(this.state)
   }
 
   // 跳转到登陆路由
@@ -35,11 +36,17 @@ export default class Register extends Component {
 
   render() {
     const {type} = this.state
+    const {msg, redirectTo} = this.props
+
+    if(redirectTo) {
+      return <Redirect to={redirectTo}/>
+    }
 
     return (
       <div>
         <Logo/>
         <WingBlank>
+          {msg ? <p className='error-msg'>{msg}</p> : null}
           <List>
             <InputItem onChange={val => this.handleChange('name', val)}>用户名:</InputItem>
             <WhiteSpace/>
@@ -55,3 +62,8 @@ export default class Register extends Component {
     )
   }
 }
+
+export default connect(
+  state => state.user,
+  {login}
+)(Login)
