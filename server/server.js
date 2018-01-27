@@ -8,6 +8,7 @@
 // 1. 引入express
 const express = require('express')
 const bodyParser = require('body-parser') // 解析请求体
+const cookieParser = require('cookie-parser')
 // 引入应用的路由器
 const appRouter = require('./app_router')
 
@@ -19,7 +20,7 @@ const app = express()
   res.send('hello server!2222')
 })*/
 
-
+app.use(cookieParser()) // 解析cookie数据
 app.use(bodyParser.json()) // 解析请求体(ajax请求: json数据格式)
 app.use(bodyParser.urlencoded({ extended: false })) // 解析请求体(表单数据)
 // 注册路由器

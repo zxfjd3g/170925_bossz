@@ -8,6 +8,8 @@ import Register from './containers/register/register'
 import Login from './containers/login/login'
 import Dashboard from './containers/dashboard/dashboard'
 
+import './assets/css/index.css'
+
 render(
   (
     <Provider store={store}>
