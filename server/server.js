@@ -25,7 +25,6 @@ app.use(bodyParser.json()) // 解析请求体(ajax请求: json数据格式)
 app.use(bodyParser.urlencoded({ extended: false })) // 解析请求体(表单数据)
 // 注册路由器
 app.use('/api', appRouter)   // 登陆: /api/login
-console.log(typeof appRouter)
 
 // 4. 启动服务器(使用app监听指定端口)
 app.listen(4000, function () {
