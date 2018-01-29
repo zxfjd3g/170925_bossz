@@ -3,6 +3,8 @@
  */
 import {combineReducers} from 'redux'
 
+import {getRedirectPath} from '../utils'
+
 import {
   AUTH_SUCCESS,
   ERROR_MSG
@@ -18,7 +20,9 @@ const initUser = {
 function user(state=initUser, action) {
   switch (action.type) {
     case AUTH_SUCCESS:
-      return {...action.data, redirectTo: '/'}
+      // 从action的data中得到type和avatar
+      const {type, avatar} = action.data
+      return {...action.data, redirectTo: getRedirectPath(type, avatar)}
     case ERROR_MSG:
       // state.msg = action.data // 不能直接更新state
       return  {...state, msg: action.data}
