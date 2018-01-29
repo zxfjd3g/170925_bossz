@@ -62,6 +62,7 @@ class GeniusInfo extends Component {
 }
 
 export default connect(
+  //  state => state.user, // props
   state => ({user: state.user}),
   {updateUser}
 )(GeniusInfo)

@@ -31,7 +31,7 @@ function user(state=initUser, action) {
     case RECEIVE_USER:
       return action.data // 返回一个新的user
     case RESET_USER:
-      return {...initUser, msg: action.data}
+      return {...initUser, msg: action.data} // 返回一个初始user
     default:
       return state
   }

@@ -9,3 +9,6 @@ export const reqRegister = (user) => ajax('/api/register', user, 'POST')
 export const reqLogin = (user) => ajax('/api/login', user, 'POST')
 // 更新用户信息
 export const reqUpdateUser = (user) => ajax('/api/update', user, 'POST')
+
+// 获取用户信息
+export const reqUserInfo = () => ajax('/api/userinfo')
