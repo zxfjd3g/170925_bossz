@@ -3,10 +3,12 @@ boss信息完善路由组件
  */
 import React, {Component} from 'react'
 import {NavBar, InputItem, TextareaItem, Button} from 'antd-mobile'
+import {connect} from 'react-redux'
 
 import AvatarSelector from '../../components/avatar-selector/avatar-selector'
+import {updateUser} from '../../redux/actions'
 
-export default class BossInfo extends Component {
+class BossInfo extends Component {
 
   state = {
     // 头像
@@ -28,7 +30,8 @@ export default class BossInfo extends Component {
 
   // 保存
   save  = () => {
-    console.log(this.state)
+    // console.log(this.state)
+    this.props.updateUser(this.state)
   }
 
   // 设置头像
@@ -55,3 +58,8 @@ export default class BossInfo extends Component {
     )
   }
 }
+
+export default connect(
+  state => state.user,
+  {updateUser}
+)(BossInfo)

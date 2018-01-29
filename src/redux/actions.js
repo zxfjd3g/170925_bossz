@@ -1,10 +1,16 @@
 /*
 包含n个action creator函数的模块
  */
-import {reqRegister, reqLogin} from '../api'
+import {
+  reqRegister,
+  reqLogin,
+  reqUpdateUser
+} from '../api'
 import {
   AUTH_SUCCESS,
-  ERROR_MSG
+  ERROR_MSG,
+  RECEIVE_USER,
+  RESET_USER
 } from './action-types'
 
 // 同步授权成功action
@@ -61,6 +67,25 @@ export const login = ({name, pwd}) => {
         // 分发失败的同步action
         dispatch(errorMsg(msg))
       }
+    }
+  }
+}
+
+
+const receiveUser = (user) => ({type: RECEIVE_USER, data: user})
+const resetUser = () => ({type: RESET_USER})
+/*
+异步更新用户
+ */
+export const updateUser = (user) => {
+  return async dispatch => {
+    // 发送异步ajax请求
+    const response = await reqUpdateUser(user)
+    const result = response.data
+    if(result.code===0) { // 成功
+      dispatch(receiveUser(result.data))
+    } else { // 失败
+      dispatch(resetUser())
     }
   }
 }

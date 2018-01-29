@@ -63,5 +63,24 @@ router.post('/login', function (req, res) {
 
 })
 
+// 更新用户信息的路由
+router.post('/update', function (req, res) {
+  // 检查用户是否登陆, 如果没有, 返回错误提示信息
+  const userid = req.cookies.userid //取出请求中cookie包含的userid
+  if(!userid) {
+    return res.send({code: 1, msg: '请先登陆'})
+  }
+  // 更新对应的user
+  const user = req.body  // 得到请求体user对象
+  UserModel.findByIdAndUpdate({_id: userid}, user, function (err, user) {
+    if(!user) { // 更新失败, 需要重新登陆
+      res.send({code: 1, msg: '请先登陆'})
+    } else { // 成功了
+      console.log('findByIdAndUpdate()', user)
+      res.send({code: 0, data: user})
+    }
+  })
+})
+
 // 4. 向外暴露路由器
 module.exports = router

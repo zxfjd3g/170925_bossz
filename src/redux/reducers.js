@@ -7,7 +7,9 @@ import {getRedirectPath} from '../utils'
 
 import {
   AUTH_SUCCESS,
-  ERROR_MSG
+  ERROR_MSG,
+  RECEIVE_USER,
+  RESET_USER,
 } from './action-types'
 
 const initUser = {
@@ -26,6 +28,10 @@ function user(state=initUser, action) {
     case ERROR_MSG:
       // state.msg = action.data // 不能直接更新state
       return  {...state, msg: action.data}
+    case RECEIVE_USER:
+      return action.data // 返回一个新的user
+    case RESET_USER:
+      return initUser
     default:
       return state
   }
