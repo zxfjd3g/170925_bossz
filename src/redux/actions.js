@@ -4,7 +4,8 @@
 import {
   reqRegister,
   reqLogin,
-  reqUpdateUser
+  reqUpdateUser,
+  reqUserInfo
 } from '../api'
 import {
   AUTH_SUCCESS,
@@ -71,8 +72,9 @@ export const login = ({name, pwd}) => {
   }
 }
 
-
+// 同步接收用户
 const receiveUser = (user) => ({type: RECEIVE_USER, data: user})
+// 同步重置用户
 const resetUser = (msg) => ({type: RESET_USER, data: msg})
 /*
 异步更新用户
@@ -82,10 +84,26 @@ export const updateUser = (user) => {
     // 发送异步ajax请求
     const response = await reqUpdateUser(user)
     const result = response.data
-    if(result.code===0) { // 成功
+    if(result.code===0) { // 更新成功
       dispatch(receiveUser(result.data))
     } else { // 失败
       dispatch(resetUser(result.msg))
     }
   }
 }
+
+/*
+异步获取用户信息(根据cookie中的userid)
+ */
+export const getUserInfo = () => {
+  return async dispatch => {
+    const response = await reqUserInfo()
+    const result = response.data
+    if(result.code===0) { // 获取用户成功
+      dispatch(receiveUser(result.data))
+    } else { // 失败
+      dispatch(resetUser(result.msg))
+    }
+  }
+}
+
