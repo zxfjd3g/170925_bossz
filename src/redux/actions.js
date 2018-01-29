@@ -73,7 +73,7 @@ export const login = ({name, pwd}) => {
 
 
 const receiveUser = (user) => ({type: RECEIVE_USER, data: user})
-const resetUser = () => ({type: RESET_USER})
+const resetUser = (msg) => ({type: RESET_USER, data: msg})
 /*
 异步更新用户
  */
@@ -85,7 +85,7 @@ export const updateUser = (user) => {
     if(result.code===0) { // 成功
       dispatch(receiveUser(result.data))
     } else { // 失败
-      dispatch(resetUser())
+      dispatch(resetUser(result.msg))
     }
   }
 }

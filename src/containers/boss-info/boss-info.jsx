@@ -4,6 +4,7 @@ boss信息完善路由组件
 import React, {Component} from 'react'
 import {NavBar, InputItem, TextareaItem, Button} from 'antd-mobile'
 import {connect} from 'react-redux'
+import {Redirect} from 'react-router-dom'
 
 import AvatarSelector from '../../components/avatar-selector/avatar-selector'
 import {updateUser} from '../../redux/actions'
@@ -39,8 +40,15 @@ class BossInfo extends Component {
     this.setState({avatar})
   }
 
-
   render () {
+    // 如果用户信息已经完成, 自动跳转到boss的应用面板: /boss
+    const {avatar} = this.props.user
+    if(avatar) {
+      // this.props.history.replace('/boss')
+      // return null
+      return <Redirect to='/boss'></Redirect>
+    }
+
     return (
       <div>
         <NavBar>BOSS信息完善</NavBar>
@@ -60,6 +68,6 @@ class BossInfo extends Component {
 }
 
 export default connect(
-  state => state.user,
+  state => ({user: state.user}),
   {updateUser}
 )(BossInfo)

@@ -3,12 +3,24 @@
  */
 import React, {Component} from 'react'
 import {Route, Switch} from 'react-router-dom'
+import cookies from 'browser-cookies'
+import {connect} from 'react-redux'
 
 import BossInfo from '../boss-info/boss-info'
 import GeniusInfo from '../genius-info/genius-info'
 
-export default class Dashboard extends Component {
+class Dashboard extends Component {
+
+
   render () {
+    // 检查用户是否登陆, 如果没有, 跳转到login
+    const userid = cookies.get('userid')
+    const {user} = this.props
+    if(!userid && !user.type) {
+      this.props.history.replace('/login')
+      return null
+    }
+
     return (
       <div>
         <Switch>
@@ -20,4 +32,6 @@ export default class Dashboard extends Component {
   }
 }
 
-// alt + shift + r
+export default connect(
+  state => ({user: state.user})  // 传入的prop为user
+)(Dashboard)

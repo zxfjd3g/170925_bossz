@@ -17,12 +17,12 @@ const _filter = {'pwd': 0, '__v': 0} // 查询时过滤掉
 
 // 3. 注册n个路由
   // 用户注册的路由
-/*
-路由回调函数的3步
-1. 获取请求参数
-2. 处理(操作数据库数据)
-3. 返回响应
- */
+  /*
+  路由回调函数的3步
+  1. 获取请求参数
+  2. 处理(操作数据库数据)
+  3. 返回响应
+   */
 router.post('/register', function (req, res) {
   // 1. 获取请求参数
   const {name, pwd, type} = req.body // 包含所有请求参数的对象
@@ -44,6 +44,7 @@ router.post('/register', function (req, res) {
     })
   })
 })
+
   // 用户登陆的路由
 router.post('/login', function (req, res) {
   // 1. 获取请求参数
@@ -63,7 +64,7 @@ router.post('/login', function (req, res) {
 
 })
 
-// 更新用户信息的路由
+  // 更新用户信息的路由
 router.post('/update', function (req, res) {
   // 检查用户是否登陆, 如果没有, 返回错误提示信息
   const userid = req.cookies.userid //取出请求中cookie包含的userid
@@ -71,12 +72,17 @@ router.post('/update', function (req, res) {
     return res.send({code: 1, msg: '请先登陆'})
   }
   // 更新对应的user
-  const user = req.body  // 得到请求体user对象
-  UserModel.findByIdAndUpdate({_id: userid}, user, function (err, user) {
+  UserModel.findByIdAndUpdate({_id: userid}, req.body, function (err, user) {// user不包含新添加的数据
     if(!user) { // 更新失败, 需要重新登陆
+      // 告诉浏览器清除保存的userid cookie
+      res.clearCookie('userid')
+
       res.send({code: 1, msg: '请先登陆'})
     } else { // 成功了
-      console.log('findByIdAndUpdate()', user)
+      const {_id, name, type} = user
+      // ...在node端不能使用, 需要使用assign来合并对象
+      user = Object.assign({}, req.body, {_id, name, type})
+
       res.send({code: 0, data: user})
     }
   })

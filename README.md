@@ -12,7 +12,19 @@
     1). 编写2步:
       在调用返回promise对象的函数左边加上await: const response = await reqRegister({name, pwd, type})
       在await所在的函数定义左边加上async
-      
+ 
+## 4. 完成与后台交互编码后, 效果没有
+    1). 点击后, 是否发送了请求(network)
+        点击监听没有加
+        分发一个异步的action
+    2). 服务器有没有正确的返回(network)
+    3). ajax请求的响应处理(使用debugger语句调试)
+        分发一个同步action (使用redux插件)
+        reducer有没有对应的处理返回(使用redux插件)
+        容器组件是否读取了状态做相应的处理
+    
+    
+  
 # day01
 ## 1. 项目开发准备
     1). 项目描述: 整体业务功能/功能模块/主体的技术/开发模式
