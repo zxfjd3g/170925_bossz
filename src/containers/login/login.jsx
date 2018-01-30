@@ -35,6 +35,7 @@ class Login extends Component {
 
 
   render() {
+
     const {type} = this.state
     const {msg, redirectTo} = this.props
 
@@ -64,6 +65,11 @@ class Login extends Component {
 }
 
 export default connect(
-  state => state.user,
+  state => state.user,  // 向Login传入返回对象中包含的所有属性
+  // state => ({user: state.user}),  // 向Login传入返回对象中包含的所有属性
   {login}
 )(Login)
+
+// 向暴露是一个包装的组件:
+// <Connect(Login) ><Login name={user.name} type={user.type} login={login}>
+// <Connect(Login) ><Login user={user} login={login}>

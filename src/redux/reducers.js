@@ -41,5 +41,14 @@ export default combineReducers({
   user
 })
 
-// 外部得到的state的结构: {user: {}}
+// 外部得到的state的结构: {user}
+
+
+/*Array.prototype.reduce2 = function (reducer, initVal) {
+  let total = initVal
+  this.forEach(item=> {
+    total = reducer(total, item)
+  })
+  return total
+}*/
 

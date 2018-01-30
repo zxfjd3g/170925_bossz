@@ -5,6 +5,7 @@ import React, {Component} from 'react'
 import {Route, Switch} from 'react-router-dom'
 import cookies from 'browser-cookies'
 import {connect} from 'react-redux'
+import {NavBar} from 'antd-mobile'
 
 import BossInfo from '../boss-info/boss-info'
 import GeniusInfo from '../genius-info/genius-info'
@@ -13,7 +14,9 @@ import Genius from '../genius/genius'
 import Msg from '../msg/msg'
 import User from '../user/user'
 import NotFound from '../../components/not-found/not-found'
+import NavFooter from '../../components/nav-footer/nav-footer'
 import {getUserInfo} from '../../redux/actions'
+import {getRedirectPath} from '../../utils'
 
 
 
@@ -27,6 +30,7 @@ class Dashboard extends Component {
       title: '牛人列表',
       icon: 'boss',
       text: '牛人',
+      hide: false
     },
     {
       path: '/genius', // 路由路径
@@ -34,6 +38,7 @@ class Dashboard extends Component {
       title: 'BOSS列表',
       icon: 'job',
       text: 'BOSS',
+      hide: false
     },
     {
       path: '/msg', // 路由路径
@@ -61,7 +66,6 @@ class Dashboard extends Component {
     }
   }
 
-
   render () {
     // 检查用户是否登陆, 如果没有, 跳转到login
     const userid = cookies.get('userid')
@@ -73,21 +77,41 @@ class Dashboard extends Component {
     // debugger
     if(user.type) { // 已经登陆
       if(location.pathname==='/') { // 访问的/
-        if(user.type==='boss') {
-          this.props.history.replace('/boss')
-          return null
-        } else {
-          this.props.history.replace('/genius')
-          return null
-        }
-      }
+        // 计算需要跳转的路由路径
+        const path = getRedirectPath(user.type, user.avatar)
+        // 跳转
+        this.props.history.replace(path)
 
-    } else {
+        return null
+      }
+      if(user.type==='boss') {
+        // 隐藏第2个
+        this.navList[1].hide = true
+      } else {
+        // 隐藏第2个
+        this.navList[0].hide = true
+      }
+    } else {  // redux中user为空, 但cookie有userid
       return null //不做任何显示
     }
 
+    // 计算出当前的nav对象
+    // /boss   /msg
+    /*
+    {
+      path: '/me', // 路由路径
+      component: User,
+      title: '个人中心',
+      icon: 'user',
+      text: '我',
+    }
+     */
+    const currentNav = this.navList.find(nav => nav.path===location.pathname)
+
     return (
       <div>
+        {currentNav ? <NavBar>{currentNav.title}</NavBar> : null}
+
         <Switch>
           <Route path='/bossinfo' component={BossInfo}/>
           <Route path='/geniusinfo' component={GeniusInfo}/>
@@ -96,8 +120,10 @@ class Dashboard extends Component {
               <Route key={index} path={nav.path} component={nav.component}/>
             ))
           }
-          {/*<Route component={NotFound}/>*/}
+          <Route component={NotFound}/>
         </Switch>
+
+        {currentNav ? <NavFooter navList={this.navList}/> : null}
       </div>
     )
   }

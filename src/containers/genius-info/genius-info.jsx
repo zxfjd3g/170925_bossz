@@ -40,8 +40,6 @@ class GeniusInfo extends Component {
     // 如果用户信息已经完成, 自动跳转到genius的应用面板: /genius
     const {avatar} = this.props.user
     if(avatar) {
-      // this.props.history.replace('/genius')
-      // return null
       return <Redirect to='/genius'></Redirect>
     }
 

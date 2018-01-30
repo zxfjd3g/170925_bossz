@@ -99,7 +99,28 @@
 
 # day03
 ## 1. 用户信息完善功能
+	1). 组件收集数据
+		设计state
+		给标签元素绑定监听
+		在监听回调函数中读取输入, 更新状态
+	
+	2). cookie总结
+		是什么?  小文本: key1=value1;key2=value2
+		哪产生?  服务器端: res.cookie(key, value)
+		哪保存? 浏览器保存 
+		cookie分类: 会话cookie(内存) / 持久化cookie(文件)
+		删除cookie: 服务器: res.clearCookie(key)
+		浏览器使用cookie: 读取cookie, 发送请求时自动携带对应的cookie
+
+	3). 整体编码流程
+
 ## 2. 搭建整体界面
+	1). 整体路由设计
+	
+	2). 检查是否需要先登陆
+
+	
+
 ## 3. 个人中心功能
 
 

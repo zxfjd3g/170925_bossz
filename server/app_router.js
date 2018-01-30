@@ -38,7 +38,7 @@ router.post('/register', function (req, res) {
     const userModel = new UserModel({name, pwd: md5(pwd), type})
     userModel.save(function (err, user) {
       // 向浏览器端返回cookie(key=value)
-      res.cookie('userid', user._id)
+      res.cookie('userid', user._id, {maxAge: 1000*60*60*24*7})
       // 3.2. 返回数据(新的user)
       res.send({code: 0, data: {_id: user._id, name, pwd, type}})
     })
