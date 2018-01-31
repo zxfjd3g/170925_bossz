@@ -75,7 +75,7 @@ export const login = ({name, pwd}) => {
 // 同步接收用户
 const receiveUser = (user) => ({type: RECEIVE_USER, data: user})
 // 同步重置用户
-const resetUser = (msg) => ({type: RESET_USER, data: msg})
+export const resetUser = (msg) => ({type: RESET_USER, data: msg})
 /*
 异步更新用户
  */

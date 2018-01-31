@@ -29,7 +29,7 @@ export default class AvatarSelector extends Component {
     // 给组件对象添加图片数组
     this.avatarList = 'boy,girl,man,woman,bull,chick,crab,hedgehog,hippopotamus,koala,lemur,pig,tiger,whale,zebra'
       .split(',')
-      .map(text => ({icon: require(`./imgs/${text}.png`), text})) //require()动态引入图片模块
+      .map(text => ({icon: require(`../../assets/imgs/${text}.png`), text})) //require()动态引入图片模块
   }
   render () {
     const {icon} = this.state
