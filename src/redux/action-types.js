@@ -20,3 +20,6 @@ export const USER_LIST = 'USER_LIST'
 // 接收消息
 export const RECEIVE_CHAT_MSG = 'RECEIVE_CHAT_MSG'
 
+// 接收多个消息
+export const CHAT_MSG_LIST = 'CHAT_MSG_LIST'
+

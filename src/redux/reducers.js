@@ -11,7 +11,8 @@ import {
   RECEIVE_USER,
   RESET_USER,
   USER_LIST,
-  RECEIVE_CHAT_MSG
+  RECEIVE_CHAT_MSG,
+  CHAT_MSG_LIST
 } from './action-types'
 
 const initUser = {
@@ -64,6 +65,8 @@ function chat(state=initChat, action) {
           users: state.users
         }*/
         return {...state, chatMsgs: [...state.chatMsgs, action.data]}
+      case CHAT_MSG_LIST:
+        return action.data
       default:
         return state
     }

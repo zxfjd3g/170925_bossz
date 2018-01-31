@@ -11,6 +11,7 @@ const express = require('express')
 const md5 = require('blueimp-md5')
 const models = require('./models')
 const UserModel = models.getModel('user')
+const ChatModel = models.getModel('chat')
 // 2. 得到路由器
 const router = express.Router()
 const _filter = {'pwd': 0, '__v': 0} // 查询时过滤掉
@@ -120,6 +121,34 @@ router.get('/list',function(req, res){
     return res.json({code:0, data: users})
   })
 })
+
+/*
+获取所有交流信息列表
+ */
+router.get('/getmsgs', function(req, res) {
+  // 当前登陆用户的id
+  const userid = req.cookies.userid
+
+  UserModel.find(function (err, userdocs) {
+    /*const users = {}  // {id1: user1, id2: user2}
+    userdocs.forEach(user => {
+      users[user._id] = {name: user.name, avatar: user.avatar}
+    })*/
+    // 根据user数组成功一个多个user的对象
+    const users = userdocs.reduce((users, user) => {
+      users[user._id] = user
+      return users
+    }, {})
+
+    ChatModel.find(
+      {'$or':[{from:userid}, {to: userid}]},
+      function(err, chatMsgs) {
+        return res.json({code: 0, data: {chatMsgs, users}})  // 需要用对象将2个数据包起来
+      }
+    )
+  })
+})
+
 
 // 4. 向外暴露路由器
 module.exports = router

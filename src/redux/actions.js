@@ -9,7 +9,8 @@ import {
   reqLogin,
   reqUpdateUser,
   reqUserInfo,
-  reqUserList
+  reqUserList,
+  reqChatMsgList
 } from '../api'
 import {
   AUTH_SUCCESS,
@@ -17,7 +18,8 @@ import {
   RECEIVE_USER,
   RESET_USER,
   USER_LIST,
-  RECEIVE_CHAT_MSG
+  RECEIVE_CHAT_MSG,
+  CHAT_MSG_LIST
 } from './action-types'
 
 // 连接服务器, 得到代表连接的socket对象
@@ -150,10 +152,29 @@ const receiveChatMsg = (chatMsg) => ({type: RECEIVE_CHAT_MSG, data: chatMsg})
  */
 export const receiveMsg = () => {
   return dispatch => {
-    // 绑定'receiveMessage'的监听, 来接收服务器发送的消息
-    socket.on('receiveMessage', function (chatMsg) {
-      dispatch(receiveChatMsg(chatMsg))
-    })
+    if(!socket.hasOn) {
+      // 绑定'receiveMessage'的监听, 来接收服务器发送的消息
+      socket.on('receiveMessage', function (chatMsg) {
+        dispatch(receiveChatMsg(chatMsg))
+      })
+      socket.hasOn = true
+    }
+
+  }
+}
+
+//消息列表
+const chatMsgList = ({chatMsgs, users}) => ({type: CHAT_MSG_LIST, data: {chatMsgs, users}})
+/*
+异步获取当前用户所有相关消息列表
+ */
+export const getChatMsgList = () => {
+  return async dispatch => {
+    const response = await reqChatMsgList()
+    const result = response.data
+    if(result.code===0) {
+      dispatch(chatMsgList(result.data)) // data: {chatMsgs: [], users: {}}
+    }
   }
 }
 
