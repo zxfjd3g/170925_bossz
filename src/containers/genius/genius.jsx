@@ -8,10 +8,12 @@ import UserList from '../../components/user-list/user-list'
 import {getUserList} from '../../redux/actions'
 
 class Genius extends Component {
+
   componentDidMount () {
-    // 获取牛人列表数据
+    // 获取BOSS列表数据
     this.props.getUserList('boss')
   }
+
   render() {
     return <UserList userList={this.props.userList}/>
   }
