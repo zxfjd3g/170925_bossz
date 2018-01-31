@@ -15,6 +15,7 @@ import Msg from '../msg/msg'
 import User from '../user/user'
 import NotFound from '../../components/not-found/not-found'
 import NavFooter from '../../components/nav-footer/nav-footer'
+import Chat from '../chat/chat'
 import {getUserInfo} from '../../redux/actions'
 import {getRedirectPath} from '../../utils'
 
@@ -115,6 +116,7 @@ class Dashboard extends Component {
         <Switch>
           <Route path='/bossinfo' component={BossInfo}/>
           <Route path='/geniusinfo' component={GeniusInfo}/>
+          <Route path='/chat/:userid' component={Chat}/>
           {
             this.navList.map((nav, index) => (
               <Route key={index} path={nav.path} component={nav.component}/>

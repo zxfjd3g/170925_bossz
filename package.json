@@ -21,7 +21,8 @@
     "express": "^4.16.2",
     "mongoose": "^5.0.1",
     "react-scripts": "1.1.0",
-    "redux-devtools-extension": "^2.13.2"
+    "redux-devtools-extension": "^2.13.2",
+    "socket.io": "^2.0.4"
   },
   "scripts": {
     "start": "react-app-rewired start",

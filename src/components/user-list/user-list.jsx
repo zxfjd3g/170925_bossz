@@ -4,6 +4,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {Card, WingBlank, WhiteSpace} from 'antd-mobile'
+import {withRouter} from 'react-router-dom'
 
 const Header = Card.Header
 const Body = Card.Body
@@ -15,14 +16,14 @@ class UserList extends React.Component {
   }
 
   render() {
-
+    // const userid = this.props.match.params.userid
     return (
       <WingBlank>
         {
           this.props.userList.map(user => (
             <div key={user._id}>
               <WhiteSpace/>
-              <Card>
+              <Card onClick={() => {this.props.history.push(`/chat/${user._id}`)}}>
                 <Header
                   title={user.name}
                   thumb={user.avatar ? require(`../../assets/imgs/${user.avatar}.png`) : null}
@@ -42,4 +43,5 @@ class UserList extends React.Component {
   }
 }
 
-export default UserList
+export default withRouter(UserList)
+// 返回一个新的组件: <Xxx><UserList history={} location={} match={}>
