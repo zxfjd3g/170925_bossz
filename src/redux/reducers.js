@@ -10,6 +10,7 @@ import {
   ERROR_MSG,
   RECEIVE_USER,
   RESET_USER,
+  USER_LIST
 } from './action-types'
 
 const initUser = {
@@ -19,6 +20,7 @@ const initUser = {
   redirectTo: '' // 需要重定向的路由路径
 }
 
+//  管理用户状态
 function user(state=initUser, action) {
   switch (action.type) {
     case AUTH_SUCCESS:
@@ -37,11 +39,25 @@ function user(state=initUser, action) {
   }
 }
 
+
+const initUserList = []
+// 管理用户列表状态
+function userList(state=initUserList, action) {
+  switch (action.type) {
+    case USER_LIST:
+      return action.data
+    default:
+      return state
+  }
+}
+
+
 export default combineReducers({
-  user
+  user,
+  userList
 })
 
-// 外部得到的state的结构: {user}
+// 外部得到的state的结构: {user, userList}
 
 
 /*Array.prototype.reduce2 = function (reducer, initVal) {

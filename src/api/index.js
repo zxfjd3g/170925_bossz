@@ -15,3 +15,6 @@ export const reqUpdateUser = (user) => ajax('/api/update', user, 'POST')
 // 获取用户信息
 export const reqUserInfo = () => ajax('/api/userinfo')
 
+// 获取boss/genius用户列表
+export const reqUserList = (type) => ajax('/api/list', {type})
+

@@ -5,13 +5,15 @@ import {
   reqRegister,
   reqLogin,
   reqUpdateUser,
-  reqUserInfo
+  reqUserInfo,
+  reqUserList
 } from '../api'
 import {
   AUTH_SUCCESS,
   ERROR_MSG,
   RECEIVE_USER,
-  RESET_USER
+  RESET_USER,
+  USER_LIST
 } from './action-types'
 
 // 同步授权成功action
@@ -103,6 +105,21 @@ export const getUserInfo = () => {
       dispatch(receiveUser(result.data))
     } else { // 失败
       dispatch(resetUser(result.msg))
+    }
+  }
+}
+
+
+const userList = (userList) => ({type: USER_LIST, data: userList})
+/*
+异步获取用户列表
+ */
+export const getUserList = (type) => {
+  return async dispatch => {
+    const response = await reqUserList(type)
+    const result = response.data
+    if(result.code===0) { // 获取用户成功
+      dispatch(userList(result.data))
     }
   }
 }

@@ -14,3 +14,6 @@ export const RECEIVE_USER = 'RECEIVE_USER'
 // 重置user
 export const RESET_USER = 'RESET_USER'
 
+// 用户列表
+export const USER_LIST = 'USER_LIST'
+
