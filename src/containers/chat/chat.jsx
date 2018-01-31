@@ -4,27 +4,30 @@
 
 import React, {Component} from 'react'
 import {NavBar, List, InputItem} from 'antd-mobile'
+import {connect} from 'react-redux'
 
-// 引入客户端io
-import io from 'socket.io-client'
-// 连接服务器, 得到代表连接的socket对象
-const socket = io('ws://localhost:4000')
+import {sendMsg, receiveMsg} from '../../redux/actions'
 
 const Item = List.Item
 
-export default class Chat extends Component {
-
+class Chat extends Component {
+  state = {
+    content: ''
+  }
   handleSubmit = () => {
+    // 收集数据
+    const from = this.props.user._id
+    const to = this.props.match.params.userid
+    const content = this.state.content
     // 向服务器发送消息
-    socket.emit('sendMessage', {name: 'Tom', date: Date.now()})
-    console.log('浏览器向服务器发送消息', {name: 'Tom', date: Date.now()})
+    this.props.sendMsg({from, to, content})
+    // 清除输入
+    this.setState({content: ''})
   }
 
   componentDidMount () {
-    // 绑定'receiveMessage'的监听, 来接收服务器发送的消息
-    socket.on('receiveMessage', function (data) {
-      console.log('浏览器端接收到消息:', data)
-    })
+    // 绑定接收服务发送的消息的监听
+    this.props.receiveMsg()
   }
 
   render() {
@@ -64,9 +67,16 @@ export default class Chat extends Component {
             extra={
               <span onClick={this.handleSubmit}>发送</span>
             }
+            value={this.state.content}
+            onChange={val => {this.setState({content: val})}}
           />
         </div>
       </div>
     )
   }
 }
+
+export default connect(
+  state => ({user: state.user}),
+  {sendMsg, receiveMsg}
+)(Chat)

@@ -10,7 +10,8 @@ import {
   ERROR_MSG,
   RECEIVE_USER,
   RESET_USER,
-  USER_LIST
+  USER_LIST,
+  RECEIVE_CHAT_MSG
 } from './action-types'
 
 const initUser = {
@@ -51,10 +52,28 @@ function userList(state=initUserList, action) {
   }
 }
 
+const initChat = {
+  chatMsgs: [],  // [{from: id1, to: id2}{}]
+  users: {}  // {id1: user1, id2: user2}
+}
+function chat(state=initChat, action) {
+    switch (action.type) {
+      case RECEIVE_CHAT_MSG:
+        /*return {
+          chatMsgs: [...state.chatMsgs, action.data],
+          users: state.users
+        }*/
+        return {...state, chatMsgs: [...state.chatMsgs, action.data]}
+      default:
+        return state
+    }
+}
+
 
 export default combineReducers({
   user,
-  userList
+  userList,
+  chat
 })
 
 // 外部得到的state的结构: {user, userList}

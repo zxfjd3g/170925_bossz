@@ -17,3 +17,6 @@ export const RESET_USER = 'RESET_USER'
 // 用户列表
 export const USER_LIST = 'USER_LIST'
 
+// 接收消息
+export const RECEIVE_CHAT_MSG = 'RECEIVE_CHAT_MSG'
+

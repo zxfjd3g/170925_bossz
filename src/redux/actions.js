@@ -1,6 +1,9 @@
 /*
 包含n个action creator函数的模块
  */
+// 引入客户端io
+import io from 'socket.io-client'
+
 import {
   reqRegister,
   reqLogin,
@@ -13,8 +16,12 @@ import {
   ERROR_MSG,
   RECEIVE_USER,
   RESET_USER,
-  USER_LIST
+  USER_LIST,
+  RECEIVE_CHAT_MSG
 } from './action-types'
+
+// 连接服务器, 得到代表连接的socket对象
+const socket = io('ws://localhost:4000')
 
 // 同步授权成功action
 const authSuccess = (user) => ({type: AUTH_SUCCESS, data: user})
@@ -121,6 +128,32 @@ export const getUserList = (type) => {
     if(result.code===0) { // 获取用户成功
       dispatch(userList(result.data))
     }
+  }
+}
+
+/*
+异步发送消息
+ */
+export const sendMsg = ({content, from, to}) => {
+  return dispatch => {
+    // 向服务器发送消息
+    socket.emit('sendMessage', {content, from, to})
+    console.log('浏览器向服务器发送消息', {content, from, to})
+  }
+}
+
+
+// 同步接收msg
+const receiveChatMsg = (chatMsg) => ({type: RECEIVE_CHAT_MSG, data: chatMsg})
+/*
+异步接收消息
+ */
+export const receiveMsg = () => {
+  return dispatch => {
+    // 绑定'receiveMessage'的监听, 来接收服务器发送的消息
+    socket.on('receiveMessage', function (chatMsg) {
+      dispatch(receiveChatMsg(chatMsg))
+    })
   }
 }
 
