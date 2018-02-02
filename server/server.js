@@ -21,10 +21,32 @@ const app = express()
 const server = require('http').Server(app)
 // 得到IO对象
 const io = require('socket.io')(server)
+// 缓存socket对象的容器
+const sockets = {}   // {userid: socket}
+
 
 // 绑定一个连接监听
 io.on('connection', function(socket) { // socket代表与某个客户的一个连接对象
   console.log('服务器端: soketio connected')
+  // 得到连接url中包含的参数userid
+  const userid = socket.handshake.query.userid
+
+  // 如果userid不存在, 不做任何处理, 直接结束
+  if(!userid) {
+    return
+  }
+
+  // 如果缓存中已存在: 从缓存移除, 断开连接
+  const savedSocket = sockets[userid]
+  if(savedSocket) {
+    delete sockets[userid]
+    savedSocket.disconnect()
+  }
+
+  //将新的连接保存到缓存中
+  sockets[userid] = socket
+
+
   // 绑定sendMsg监听, 接收客户端发送的消息
   socket.on('sendMessage', function({from, to, content}) {
     console.log('服务器接收到浏览器的消息', {from, to, content})
@@ -34,7 +56,11 @@ io.on('connection', function(socket) { // socket代表与某个客户的一个�
     const chatModel = new ChatModel({from, to, content, create_time, chat_id})
     chatModel.save(function (err, chatMsg) {
       // 保存完成后: 分发消息
-      io.emit('receiveMessage', chatMsg)
+      // io.emit('receiveMessage', chatMsg)
+      // 向发送用户发消息
+      sockets[from] && sockets[from].emit('receiveMessage', chatMsg)
+      // 向目标用户发消息
+      sockets[to] && sockets[to].emit('receiveMessage', chatMsg)
     })
   })
 })

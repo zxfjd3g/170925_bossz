@@ -66,7 +66,8 @@ function chat(state=initChat, action) {
         }*/
         return {...state, chatMsgs: [...state.chatMsgs, action.data]}
       case CHAT_MSG_LIST:
-        return action.data
+        const {chatMsgs, users} = action.data
+        return {chatMsgs, users}
       default:
         return state
     }

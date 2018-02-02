@@ -3,17 +3,19 @@
  */
 
 import React, {Component} from 'react'
-import {NavBar, List, InputItem} from 'antd-mobile'
+import {NavBar, List, InputItem, Grid, Icon} from 'antd-mobile'
 import {connect} from 'react-redux'
 
-import {sendMsg, receiveMsg, getChatMsgList} from '../../redux/actions'
+import {sendMsg} from '../../redux/actions'
 
 const Item = List.Item
 
 class Chat extends Component {
   state = {
-    content: ''
+    content: '',
+    isShow: false // 是否显示表情列表
   }
+  // 处理点击发送消息
   handleSubmit = () => {
     // 收集数据
     const from = this.props.user._id
@@ -22,14 +24,37 @@ class Chat extends Component {
     // 向服务器发送消息
     this.props.sendMsg({from, to, content})
     // 清除输入
-    this.setState({content: ''})
+    this.setState({content: '', isShow: false})
   }
 
-  componentDidMount () {
-    // 绑定接收服务发送的消息的监听
-    this.props.receiveMsg()
-    // 获取当前用户相关的所有聊天列表
-    this.props.getChatMsgList()
+  // 处理点击切换表情显示
+  toggleShow = () => {
+    const isShow = !this.state.isShow
+    this.setState({isShow})
+    if(isShow) {
+      // 异步手动派发resize事件,解决表情列表显示的bug
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'))
+      }, 0)
+    }
+  }
+
+  componentWillMount() {
+    this.emojis = ['😀', '😂', '😆', '😊', '😍', '🤷', '❤', '😂', '😍', '🔥', '🤔', '😊', '🙄', '😘',
+      '😀', '😂', '😆', '😊', '😍', '🤷', '❤', '😂', '😍', '🔥', '🤔', '😊', '🙄', '😘',
+      '😀', '😂', '😆', '😊', '😍', '🤷', '❤', '😂', '😍', '🔥', '🤔', '😊', '🙄', '😘']
+    this.emojis = this.emojis.map(value => ({text: value}))
+    console.log(this.emojis)
+  }
+
+  componentDidMount() {
+    // 初始显示列表
+    window.scrollTo(0, document.body.scrollHeight)
+  }
+
+  componentDidUpdate () {
+    // 更新显示列表
+    window.scrollTo(0, document.body.scrollHeight)
   }
 
   render() {
@@ -54,8 +79,16 @@ class Chat extends Component {
 
     return (
       <div id='chat-page'>
-        <NavBar>{userid}</NavBar>
-        <List>
+        <NavBar
+          className='stick-top'
+          icon={<Icon type='left'/>}
+          onLeftClick={() => {
+            this.props.history.goBack()
+          }}
+        >
+          {users[userid].name}
+        </NavBar>
+        <List style={{marginBottom: 50, marginTop: 50}}>
           {
             currMsgs.map(msg => {
               if(msg.from===userid) { //别人发过来的
@@ -84,13 +117,32 @@ class Chat extends Component {
 
         <div className='am-tab-bar'>
           <InputItem
-            placeholder="请输入"
-            extra={
+          placeholder="请输入"
+          extra={
+            <div>
+              <span onClick={this.toggleShow}>😀</span>
               <span onClick={this.handleSubmit}>发送</span>
-            }
-            value={this.state.content}
-            onChange={val => {this.setState({content: val})}}
-          />
+            </div>
+          }
+          value={this.state.content}
+          onChange={val => {this.setState({content: val})}}
+          onFocus = {() => {this.setState({isShow: false})}}
+        />
+
+          {
+            this.state.isShow ? (
+              <Grid
+                data={this.emojis}
+                columnNum={8}
+                isCarousel={true}
+                carouselMaxRow={4}
+                onClick={(item) => {// 点击项对应的数据项
+                  this.setState({content: this.state.content + item.text})
+                }}
+              />
+            ) : null
+          }
+
         </div>
       </div>
     )
@@ -99,7 +151,7 @@ class Chat extends Component {
 
 export default connect(
   state => ({user: state.user, chat: state.chat}),
-  {sendMsg, receiveMsg, getChatMsgList}
+  {sendMsg}
 )(Chat)
 
 // <Chat user={} chat={}>

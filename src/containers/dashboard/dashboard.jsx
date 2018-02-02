@@ -16,7 +16,7 @@ import User from '../user/user'
 import NotFound from '../../components/not-found/not-found'
 import NavFooter from '../../components/nav-footer/nav-footer'
 import Chat from '../chat/chat'
-import {getUserInfo} from '../../redux/actions'
+import {getUserInfo, getChatMsgList} from '../../redux/actions'
 import {getRedirectPath} from '../../utils'
 
 
@@ -65,6 +65,9 @@ class Dashboard extends Component {
     if(userid && !user._id) {
       this.props.getUserInfo()
     }
+
+    // 获取当前用户相关的所有聊天列表
+    this.props.getChatMsgList()
   }
 
   render () {
@@ -133,5 +136,5 @@ class Dashboard extends Component {
 
 export default connect(
   state => ({user: state.user}),  // 传入的prop为user
-  {getUserInfo}
+  {getUserInfo, getChatMsgList}
 )(Dashboard)

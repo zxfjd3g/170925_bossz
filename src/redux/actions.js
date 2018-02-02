@@ -23,7 +23,25 @@ import {
 } from './action-types'
 
 // 连接服务器, 得到代表连接的socket对象
-const socket = io('ws://localhost:4000')
+let socket
+
+/*
+连接服务器并绑定接收消息监听的函数(在得到user后才调用)
+ */
+function initSocketIO(dispatch, userid) {
+  // 如果没有连接, 才去连接
+  if(!socket) {
+    // 连接服务器
+    socket = io('ws://localhost:4000?userid='+userid)
+    // 绑定接收消息的监听
+    socket.on('receiveMessage', function (chatMsg) {
+      // 收到消息后, 分发同步action, 接收新的消息
+      dispatch(receiveChatMsg(chatMsg))
+    })
+  }
+
+}
+
 
 // 同步授权成功action
 const authSuccess = (user) => ({type: AUTH_SUCCESS, data: user})
@@ -49,6 +67,8 @@ export const register = ({name, pwd, pwd2, type}) => {
       const response = await reqRegister({name, pwd, type})
       const {code, data, msg} = response.data  // {code: 0, data: user}  {code: 1, msg: 'xxx'}
       if (code === 0) {
+        // 一旦得到用户, 就去初始socketio
+        initSocketIO(dispatch, data._id)
         // 分发成功的同步action
         dispatch(authSuccess(data))
       } else {
@@ -73,6 +93,8 @@ export const login = ({name, pwd}) => {
       const response = await reqLogin({name, pwd})
       const {code, data, msg} = response.data  // {code: 0, data: user}  {code: 1, msg: 'xxx'}
       if (code === 0) {
+        // 一旦得到用户, 就去初始socketio
+        initSocketIO(dispatch, data._id)
         // 分发成功的同步action
         dispatch(authSuccess(data))
       } else {
@@ -111,6 +133,8 @@ export const getUserInfo = () => {
     const response = await reqUserInfo()
     const result = response.data
     if(result.code===0) { // 获取用户成功
+      // 一旦得到用户, 就去初始socketio
+      initSocketIO(dispatch, result.data._id)
       dispatch(receiveUser(result.data))
     } else { // 失败
       dispatch(resetUser(result.msg))
@@ -147,21 +171,6 @@ export const sendMsg = ({content, from, to}) => {
 
 // 同步接收msg
 const receiveChatMsg = (chatMsg) => ({type: RECEIVE_CHAT_MSG, data: chatMsg})
-/*
-异步接收消息
- */
-export const receiveMsg = () => {
-  return dispatch => {
-    if(!socket.hasOn) {
-      // 绑定'receiveMessage'的监听, 来接收服务器发送的消息
-      socket.on('receiveMessage', function (chatMsg) {
-        dispatch(receiveChatMsg(chatMsg))
-      })
-      socket.hasOn = true
-    }
-
-  }
-}
 
 //消息列表
 const chatMsgList = ({chatMsgs, users}) => ({type: CHAT_MSG_LIST, data: {chatMsgs, users}})

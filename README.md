@@ -121,8 +121,69 @@
 
 # day04
 ## 1. 个人中心功能
+	1). 使用antd搭建界面
+	2). 从redux中获取user显示
+	3). 登出功能: 使用browser-cookies删除userid cookie, 重置redux中的user
+
 ## 2. boss/牛人列表
+	1). 为boss和genius组件, 抽取共同的ui组件: user-list
+	2). 实现异步获取用户信息信息的整套流程代码
+		后台: /list---> type---- {code: 0, data: userList}
+		前台: 
+			api/ajax:  reqUserList(type) -->ajax('/api/list', {type}) 
+			redux: 
+				异步action: getUserList(type) --> reqUserList(type) --->调用同步action(USER_LIST, data: userList)
+				reducers: userList() ---> case USER_LIST: --->action.data
+			组件:
+				容器组件(boss/genius):
+					import {connect} from 'react-redux'
+					import {xxx} from '../redux/actions'
+				
+					组件内部
+						const {userList, xxx} = this.props
+						// userList用读取显示
+						// xxx用来执行, 最终更新状态
+
+					export default connet(
+						state => ({userList: state.userList}),
+						{xxx}
+					)(Boss)
+				ui组件(user-list): 
+					<UserList userList={userList}/>  纯粹的react组件
+					组件内部需要使用router的API(history/location/match): export default withRoute(UserList)
+
 ## 3. 实时聊天功能
+	1). socket.io的理解和使用
+		socket.io是一个能实现多人远程实时通信(聊天)的库
+		内部包装的是H5 WebSocket和轮询(老浏览使用)
+		它包含2个库: socket.io(服务器端), socket.io-client(浏览器端)
+		服务器端编码
+			io.on('connection', function(socket) {
+			  console.log('socket.io 服务器与一个浏览器连接上了')
+			  // 绑定sendMsg监听, 接收此浏览器发送的消息
+			  socket.on('sendMsg', function(data) {
+			    console.log('服务器接收到浏览器的消息', data)
+			    // 向所有连接上的浏览器发消息(名称, 数据)
+			    io.emit('recvMsg', data)
+				console.log('服务器向浏览器发送消息', data)
+			  })
+			})
+		客户端编码
+			// 连接服务器, 得到代表连接的socket对象
+			const socket = io('ws://localhost:4000')
+			// 绑定'receiveMessage'的监听, 来接收服务器发送的消息
+			socket.on('receiveMessage', function (data) {
+			  console.log('浏览器端接收到消息:', data)
+			})
+			// 向服务器发送消息
+			socket.emit('sendMessage', {name: 'Tom', date: Date.now()})
+
+
+	2). 实现基本的聊天功能
+		服务器端
+
+		浏览器端
+
 
 
 
