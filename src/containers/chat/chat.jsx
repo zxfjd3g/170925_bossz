@@ -19,9 +19,12 @@ class Chat extends Component {
   // 处理点击发送消息
   handleSubmit = () => {
     // 收集数据
+    const content = this.state.content
+    if(!content) {
+      return
+    }
     const from = this.props.user._id
     const to = this.props.match.params.userid
-    const content = this.state.content
     // 向服务器发送消息
     this.props.sendMsg({from, to, content})
     // 清除输入

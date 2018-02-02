@@ -20,7 +20,7 @@ class UserList extends React.Component {
     // const userid = this.props.match.params.userid
     return (
       <WingBlank style={{marginTop: 50, marginBottom: 50}}>
-        <QueueAnim type='right' delay={200} duration={300}>
+        <QueueAnim type='bottom' delay={200} duration={300}>
           {
             this.props.userList.map(user => (
               <div key={user._id}>
