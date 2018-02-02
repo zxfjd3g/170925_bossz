@@ -150,5 +150,25 @@ router.get('/getmsgs', function(req, res) {
 })
 
 
+/*
+修改指定消息为已读
+*/
+router.post('/readmsg', function (req, res) {
+  const to = req.cookies.userid
+  const from = req.body.from
+  /*
+  参数1: 查询条件
+  参数2: 更新为指定的数据对象
+  参数3: 是否1次更新多条, 默认只更新一条
+  参数4: 更新完成的回调函数
+   */
+  ChatModel.update({from, to, read: false},
+    {read: true}, {multi: true}, function (err, doc) { // multi: true更新所有匹配的, 默认只更新匹配的第一条
+      console.log('readmsg()', doc)
+      res.send({code: 0, data: doc.nModified}) // nModified代表更新的数量
+    })
+
+})
+
 // 4. 向外暴露路由器
 module.exports = router

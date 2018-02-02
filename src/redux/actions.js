@@ -10,7 +10,8 @@ import {
   reqUpdateUser,
   reqUserInfo,
   reqUserList,
-  reqChatMsgList
+  reqChatMsgList,
+  reqReadMsg
 } from '../api'
 import {
   AUTH_SUCCESS,
@@ -19,7 +20,8 @@ import {
   RESET_USER,
   USER_LIST,
   RECEIVE_CHAT_MSG,
-  CHAT_MSG_LIST
+  CHAT_MSG_LIST,
+  MSG_READ
 } from './action-types'
 
 // 连接服务器, 得到代表连接的socket对象
@@ -186,6 +188,22 @@ export const getChatMsgList = () => {
       //  得到当前用户的id
       const userid = getState().user._id
       dispatch(chatMsgList({...result.data, userid})) // data: {chatMsgs: [], users: {}}
+    }
+  }
+}
+
+const msgRead = ({count, from, to}) => ({type: MSG_READ, data: {count, from, to}})
+
+/*
+异步读取消息
+ */
+export const readMsg = (from) => {
+  return async (dispatch, getState) => {
+    const response = await reqReadMsg(from)
+    const {code, data} = response.data
+    if(code===0) {
+      // 分发同步action
+      dispatch(msgRead({count: data, from, to: getState().user._id}))
     }
   }
 }

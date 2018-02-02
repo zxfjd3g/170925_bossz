@@ -21,3 +21,6 @@ export const reqUserList = (type) => ajax('/api/list', {type})
 // 获取当前用户的所有聊天记录
 export const reqChatMsgList = () => ajax('/api/getmsgs')
 
+// 请求标识读取了消息
+export const reqReadMsg = (from) => ajax('/api/readmsg', {from}, 'POST')
+

@@ -23,3 +23,5 @@ export const RECEIVE_CHAT_MSG = 'RECEIVE_CHAT_MSG'
 // 接收多个消息
 export const CHAT_MSG_LIST = 'CHAT_MSG_LIST'
 
+// 消息已读
+export const MSG_READ = 'MSG_READ'

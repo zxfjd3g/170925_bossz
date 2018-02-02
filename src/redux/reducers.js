@@ -12,7 +12,8 @@ import {
   RESET_USER,
   USER_LIST,
   RECEIVE_CHAT_MSG,
-  CHAT_MSG_LIST
+  CHAT_MSG_LIST,
+  MSG_READ
 } from './action-types'
 
 const initUser = {
@@ -80,6 +81,25 @@ function chat(state=initChat, action) {
         }, 0)
 
         return {chatMsgs, users, unReadCount}
+
+      case MSG_READ:
+        const {count, from, to} = action.data
+        // 计算生成一个新的chatMsgs
+        var chatMsgs = state.chatMsgs.map(msg => {
+          // 只有当msg, to都相同, 并且未读, 才返回一个新的msg
+          if(msg.from===from && msg.to===to && !msg.read) {
+            // msg.read = true
+            // Object.assign({}, msg, {read: true})
+            return {...msg, read: true}
+          } else {
+            return msg
+          }
+        })
+        return {
+          chatMsgs: chatMsgs,  // [{from: id1, to: id2}{}]
+          users: state.users,
+          unReadCount: state.unReadCount-count
+        }
       default:
         return state
     }
