@@ -36,7 +36,7 @@ function initSocketIO(dispatch, userid) {
     // 绑定接收消息的监听
     socket.on('receiveMessage', function (chatMsg) {
       // 收到消息后, 分发同步action, 接收新的消息
-      dispatch(receiveChatMsg(chatMsg))
+      dispatch(receiveChatMsg(chatMsg, userid))
     })
   }
 
@@ -170,19 +170,22 @@ export const sendMsg = ({content, from, to}) => {
 
 
 // 同步接收msg
-const receiveChatMsg = (chatMsg) => ({type: RECEIVE_CHAT_MSG, data: chatMsg})
+const receiveChatMsg = (chatMsg, userid) => ({type: RECEIVE_CHAT_MSG, data: {chatMsg, userid}})
 
 //消息列表
-const chatMsgList = ({chatMsgs, users}) => ({type: CHAT_MSG_LIST, data: {chatMsgs, users}})
+const chatMsgList = ({chatMsgs, users, userid}) => ({type: CHAT_MSG_LIST, data: {chatMsgs, users, userid}})
 /*
 异步获取当前用户所有相关消息列表
  */
 export const getChatMsgList = () => {
-  return async dispatch => {
+  // 异步action返回的函数包含2个参数: 第1个dispatch函数, 第2个是getState函数
+  return async (dispatch, getState) => {
     const response = await reqChatMsgList()
     const result = response.data
     if(result.code===0) {
-      dispatch(chatMsgList(result.data)) // data: {chatMsgs: [], users: {}}
+      //  得到当前用户的id
+      const userid = getState().user._id
+      dispatch(chatMsgList({...result.data, userid})) // data: {chatMsgs: [], users: {}}
     }
   }
 }

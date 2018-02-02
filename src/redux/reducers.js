@@ -55,7 +55,8 @@ function userList(state=initUserList, action) {
 
 const initChat = {
   chatMsgs: [],  // [{from: id1, to: id2}{}]
-  users: {}  // {id1: user1, id2: user2}
+  users: {},  // {id1: user1, id2: user2}
+  unReadCount: 0  // 总的未读数量
 }
 function chat(state=initChat, action) {
     switch (action.type) {
@@ -64,15 +65,25 @@ function chat(state=initChat, action) {
           chatMsgs: [...state.chatMsgs, action.data],
           users: state.users
         }*/
-        return {...state, chatMsgs: [...state.chatMsgs, action.data]}
+        var {chatMsg, userid} = action.data
+        return {
+          chatMsgs: [...state.chatMsgs, chatMsg],
+          users: state.users,
+          unReadCount: state.unReadCount + (userid===chatMsg.to ? 1 : 0)  // 消息只有是发给我的才加1
+        }
       case CHAT_MSG_LIST:
-        const {chatMsgs, users} = action.data
-        return {chatMsgs, users}
+        var {chatMsgs, users, userid} = action.data
+        // 计算总的未读数量
+        const unReadCount = chatMsgs.reduce((preTotal, msg) => {
+          // 别人发给我的未读消息
+          return preTotal + (msg.to===userid && !msg.read ? 1 : 0)
+        }, 0)
+
+        return {chatMsgs, users, unReadCount}
       default:
         return state
     }
 }
-
 
 export default combineReducers({
   user,
@@ -80,7 +91,7 @@ export default combineReducers({
   chat
 })
 
-// 外部得到的state的结构: {user, userList}
+// 外部得到的state的结构: {user, userList, chat}
 
 
 /*Array.prototype.reduce2 = function (reducer, initVal) {

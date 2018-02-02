@@ -128,13 +128,13 @@ class Dashboard extends Component {
           <Route component={NotFound}/>
         </Switch>
 
-        {currentNav ? <NavFooter navList={this.navList}/> : null}
+        {currentNav ? <NavFooter navList={this.navList} unReadCount={this.props.unReadCount}/> : null}
       </div>
     )
   }
 }
 
 export default connect(
-  state => ({user: state.user}),  // 传入的prop为user
+  state => ({user: state.user, unReadCount: state.chat.unReadCount}),  // 传入的prop为user
   {getUserInfo, getChatMsgList}
 )(Dashboard)
