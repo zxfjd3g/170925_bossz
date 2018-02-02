@@ -4,6 +4,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {List, Badge} from 'antd-mobile'
+import QueueAnim from 'rc-queue-anim'
 
 const Item = List.Item
 const Brief = Item.Brief
@@ -82,27 +83,30 @@ class Msg extends Component {
     console.log('msg', lastMsgs)
 
     return (
-      <List>
-        {
-          lastMsgs.map(msg => {
-            // 确定目标用户的id
-            const targetId = msg.from===meId ? msg.to : msg.from
-            const targetUser = users[targetId]
-            // console.log('------', meId, targetId, msg.from, msg.to)
-            return (
-              <Item
-                key={msg._id}
-                extra={<Badge text={msg.unReadCount}/>}
-                thumb={require(`../../assets/imgs/${targetUser.avatar}.png`)}
-                arrow='horizontal'
-                onClick={() => {this.props.history.push(`/chat/${targetId}`)}}
-              >
-                {msg.content}
-                <Brief>{targetUser.name}</Brief>
-              </Item>
-            )
-          })
-        }
+      <List style={{marginTop: 50, marginBottom: 50}}>
+        <QueueAnim type='scale' delay={200} duration={300}>
+          {
+            lastMsgs.map(msg => {
+              // 确定目标用户的id
+              const targetId = msg.from===meId ? msg.to : msg.from
+              const targetUser = users[targetId]
+              // console.log('------', meId, targetId, msg.from, msg.to)
+              return (
+                <Item
+                  key={msg._id}
+                  extra={<Badge text={msg.unReadCount}/>}
+                  thumb={require(`../../assets/imgs/${targetUser.avatar}.png`)}
+                  arrow='horizontal'
+                  onClick={() => {this.props.history.push(`/chat/${targetId}`)}}
+                >
+                  {msg.content}
+                  <Brief>{targetUser.name}</Brief>
+                </Item>
+              )
+            })
+          }
+        </QueueAnim>
+
       </List>
     )
   }

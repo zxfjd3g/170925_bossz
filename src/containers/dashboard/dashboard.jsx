@@ -114,7 +114,7 @@ class Dashboard extends Component {
 
     return (
       <div>
-        {currentNav ? <NavBar>{currentNav.title}</NavBar> : null}
+        {currentNav ? <NavBar className="stick-top">{currentNav.title}</NavBar> : null}
 
         <Switch>
           <Route path='/bossinfo' component={BossInfo}/>
