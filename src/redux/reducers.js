@@ -25,6 +25,7 @@ const initUser = {
 
 //  管理用户状态
 function user(state=initUser, action) {
+  console.log('user()', state, action)
   switch (action.type) {
     case AUTH_SUCCESS:
       // 从action的data中得到type和avatar
@@ -46,6 +47,7 @@ function user(state=initUser, action) {
 const initUserList = []
 // 管理用户列表状态
 function userList(state=initUserList, action) {
+  console.log('userList()', state, action)
   switch (action.type) {
     case USER_LIST:
       return action.data
@@ -60,6 +62,7 @@ const initChat = {
   unReadCount: 0  // 总的未读数量
 }
 function chat(state=initChat, action) {
+  console.log('chat()', state, action)
     switch (action.type) {
       case RECEIVE_CHAT_MSG:
         /*return {
